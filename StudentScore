@@ -1,0 +1,123 @@
+import java.io.*;
+import java.util.*;
+
+class Course {
+    String code, title;
+    int capacity;
+
+    public Course(String code, String title, int capacity) {
+        this.code = code;
+        this.title = title;
+        this.capacity = capacity;
+    }
+
+    public String toString() {
+        return code + " - " + title + " (Seats: " + capacity + ")";
+    }
+}
+
+class Student {
+    String id, name;
+    List<String> registeredCourses = new ArrayList<>();
+
+    public Student(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public void registerCourse(String courseCode) {
+        registeredCourses.add(courseCode);
+    }
+
+    public void removeCourse(String courseCode) {
+        registeredCourses.remove(courseCode);
+    }
+
+    public String toString() {
+        return "ID: " + id + ", Name: " + name + ", Courses: " + registeredCourses;
+    }
+}
+
+public class StudentCourseRegistration {
+    static List<Course> courses = new ArrayList<>();
+    static Map<String, Student> students = new HashMap<>();
+
+    public static void main(String[] args) {
+        loadCourses();
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n1. View Courses\n2. Register Student\n3. Register for Course\n4. Remove Course\n5. View Students\n6. Exit");
+            System.out.print("Enter choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine();  
+
+            switch (choice) {
+                case 1:
+                    displayCourses();
+                    break;
+                case 2:
+                    System.out.print("Enter Student ID: ");
+                    String id = sc.nextLine();
+                    System.out.print("Enter Name: ");
+                    String name = sc.nextLine();
+                    students.put(id, new Student(id, name));
+                    System.out.println("Student Registered!");
+                    break;
+                case 3:
+                    System.out.print("Enter Student ID: ");
+                    id = sc.nextLine();
+                    System.out.print("Enter Course Code: ");
+                    String courseCode = sc.nextLine();
+                    if (students.containsKey(id)) {
+                        students.get(id).registerCourse(courseCode);
+                        System.out.println("Course Registered!");
+                    } else {
+                        System.out.println("Student Not Found!");
+                    }
+                    break;
+                case 4:
+                    System.out.print("Enter Student ID: ");
+                    id = sc.nextLine();
+                    System.out.print("Enter Course Code: ");
+                    courseCode = sc.nextLine();
+                    if (students.containsKey(id)) {
+                        students.get(id).removeCourse(courseCode);
+                        System.out.println("Course Removed!");
+                    } else {
+                        System.out.println("Student Not Found!");
+                    }
+                    break;
+                case 5:
+                    displayStudents();
+                    break;
+                case 6:
+                    System.out.println("Exiting...");
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Invalid Choice!");
+            }
+        }
+    }
+
+    public static void loadCourses() {
+        courses.add(new Course("CS101", "Java Programming", 30));
+        courses.add(new Course("CS102", "Data Structures", 25));
+        courses.add(new Course("CS103", "Database Systems", 20));
+    }
+
+    public static void displayCourses() {
+        System.out.println("\nAvailable Courses:");
+        for (Course c : courses) {
+            System.out.println(c);
+        }
+    }
+
+    public static void displayStudents() {
+        System.out.println("\nRegistered Students:");
+        for (Student s : students.values()) {
+            System.out.println(s);
+        }
+    }
+}
