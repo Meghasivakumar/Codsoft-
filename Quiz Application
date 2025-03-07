@@ -1,0 +1,58 @@
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
+
+class QuizApplication {
+    private static Scanner scanner = new Scanner(System.in);
+    private static int score = 0;
+    private static int timeLimit = 10; // Time limit per question in seconds
+    private static boolean answered = false;
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to the Quiz!");
+        startQuiz();
+        System.out.println("Quiz Over! Your Final Score: " + score);
+    }
+
+    public static void startQuiz() {
+        String[][] questions = {
+            {"What is the capital of France?", "A. Berlin", "B. Madrid", "C. Paris", "D. Rome", "C"},
+            {"Which programming language is used for Android development?", "A. Python", "B. Java", "C. C++", "D. Swift", "B"},
+            {"What is 5 + 7?", "A. 10", "B. 12", "C. 15", "D. 20", "B"},
+        };
+
+        for (String[] question : questions) {
+            askQuestion(question);
+        }
+    }
+
+    public static void askQuestion(String[] question) {
+        System.out.println("\n" + question[0]);
+        for (int i = 1; i <= 4; i++) {
+            System.out.println(question[i]);
+        }
+        answered = false;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!answered) {
+                    System.out.println("\nTime's up! Moving to the next question...");
+                }
+            }
+        }, timeLimit * 1000);
+
+        System.out.print("Enter your answer (A/B/C/D): ");
+        String answer = scanner.next().toUpperCase();
+        answered = true;
+        timer.cancel();
+
+        if (answer.equals(question[5])) {
+            System.out.println("Correct!");
+            score++;
+        } else {
+            System.out.println("Wrong! The correct answer is " + question[5]);
+        }
+    }
+}
